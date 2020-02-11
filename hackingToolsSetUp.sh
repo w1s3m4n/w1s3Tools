@@ -48,7 +48,7 @@ create_directory_tree(){
 		mkdir hackingTools 2> /dev/null; cd hackingTools 2> /dev/null
 		mkdir web wifi privesc windows anon 2> /dev/null
 		mkdir privesc/linux privesc/windows 2> /dev/null
-		sudo chmod 777 ~/.bashrc
+		sudo chmod +rw ~/.bashrc
 }
 
 banner(){

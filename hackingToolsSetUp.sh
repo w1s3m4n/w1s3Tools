@@ -48,12 +48,54 @@ create_directory_tree(){
 		mkdir hackingTools 2> /dev/null; cd hackingTools 2> /dev/null
 		mkdir web wifi privesc windows anon 2> /dev/null
 		mkdir privesc/linux privesc/windows 2> /dev/null
+		sudo chmod 777 ~/.bashrc
 }
 
 banner(){
 	echo "****************************************************"
 	echo -e "*** ${WHITE}W1S3M4N ${BLUE}HACKING TOOLS${NOCOLOR} Downloader & Installer ***"
-        echo "****************************************************"
+    echo "****************************************************"
+    echo "*** The following tools will be downloaded and installed or upgraded:"
+    echo -e "** ${BLUE}Web Tools:${NOCOLOR}"
+    echo "|---------------------|"
+    echo "|** Testssl           |"
+    echo "|** Gobuster          |"
+    echo "|** Dirsearch         |"
+    echo "|** CMSeeK            |"
+    echo "|** Clickjacking PoC  |"
+    echo "|---------------------|"
+    echo -e "** ${BLUE}WiFi Tools:${NOCOLOR}"
+    echo "|---------------------|"
+	echo "|** Airgeddon         |"
+	echo "|** Fluxion           |"
+	echo "|---------------------|"
+	echo -e "** ${BLUE}PrivEsc Tools:${NOCOLOR}"
+	echo "|----------------------------------|"
+	echo -e "|** ${PURPLE}Linux:${NOCOLOR}                         |"
+	echo "|** BeRoot                         |"
+	echo "|** CheckExploits                  |"
+	echo "|** Linux-Exploit-Suggester        |"
+	echo "|** Linux-Exploit-Suggester (Perl) |"
+	echo "|** LinEnum                        |"
+	echo "|** LinuxPrivChecker               |"
+	echo "|** Unix-privesc-check             |"
+	echo -e "|** ${PURPLE}Windows:${NOCOLOR}                       |"
+	echo "|** JuicyPotato                    |"
+	echo "|** BloodHound                     |"
+	echo "|** Mimikatz                       |"
+	echo "|** JAWS                           |"
+	echo "|** PowerSploit                    |"
+	echo "|** Tater                          |"
+	echo "|** Windows-Privesc-Check          |"
+	echo "|** WinPrivCheck                   |"
+	echo "|----------------------------------|"
+	echo -e "** ${BLUE}Miscellaneous:${NOCOLOR}"
+	echo "|------------------|"
+	echo "|** AutoRecon      |"
+	echo "|** SecLists       |"
+	echo "|** SublimeText    |"
+	echo "|------------------|"
+	echo ""
 
 }
 
@@ -61,10 +103,11 @@ banner(){
 ## INIT
 clear
 banner
+sleep 1
+print_color "Executing..." "BLUE"
 create_directory_tree
 
 install=$1
-
 ###### WEB TOOLS ######
 cd web
 print_color "[Web] Checking for web tools..." "BLUE"
@@ -87,7 +130,7 @@ else
         if [ "$install" != "-n" ];then
                 print_color "[Web] Installing testssl..." "BLUE"
                 directory=$(pwd)
-	        echo "alias testssl=${directory}/testssl.sh/testssl.sh" >> ~/.bashrc
+	        sudo echo "alias testssl=${directory}/testssl.sh/testssl.sh" >> ~/.bashrc
         fi
 fi
 print_color "[Web] Done!" "GREEN"
@@ -110,7 +153,7 @@ else
         cd dirsearch
         if [ "$install" != "-n" ];then
                 directory=$(pwd)
-                echo "alias dirsearch=python3.7 ${directory}/dirsearch/dirsearch.py" >> ~/.bashrc
+                sudo echo "alias dirsearch=python3.7 ${directory}/dirsearch/dirsearch.py" >> ~/.bashrc
         fi
 fi
 print_color "[Web] Done!" "GREEN"
@@ -131,18 +174,20 @@ else
 	if [ "${arch}" == "i836" ];then
 		wget https://github.com/OJ/gobuster/releases/download/v3.0.1/gobuster-linux-386.7z &> /dev/null
 		7z e gobuster-linux-386.7z &> /dev/null
-		rm -rf gobuster-linux-386.7z
+		mv gobuster-linux-386/gobuster .
+		rm -rf gobuster-linux-386.7z gobuster-linux-386
 	else
 		wget https://github.com/OJ/gobuster/releases/download/v3.0.1/gobuster-linux-amd64.7z &> /dev/null
-                7z e gobuster-linux-amd64.7z &> /dev/null
-		rm -rf gobuster-linux-amd64.7z
+        7z e gobuster-linux-amd64.7z &> /dev/null
+        mv gobuster-linux-amd64/gobuster .
+		rm -rf gobuster-linux-amd64.7z gobuster-linux-amd64
 	fi
 
         print_color "[Web] Gobuster downloaded." "BLUE"
         
         if [ "$install" != "-n" ];then
-                print_color "[Web] Now installing..." "BLUE"
-                cp gobuster /usr/bin/
+            print_color "[Web] Now installing..." "BLUE"
+            cp gobuster /usr/bin/
         	chmod +x /usr/bin/gobuster
         fi
 fi
@@ -166,7 +211,7 @@ else
                 cd CMSeeK
                 pip3 install -r requirements.txt &> /dev/null
                 directory=$(pwd)
-                echo "alias cmseek=python3.7 ${directory}/cmseek.py" >> ~/.bashrc
+                sudo echo "alias cmseek=python3.7 ${directory}/cmseek.py" >> ~/.bashrc
                 cd ..
         fi
 
@@ -216,7 +261,7 @@ else
         if [ "$install" != "-n" ];then
                 print_color "[WiFi] Installing Airgeddon..." "BLUE"
                 directory=$(pwd)
-                echo "alias airgeddon=${directory}/airgeddon.sh" >> ~/.bashrc
+                sudo echo "alias airgeddon=${directory}/airgeddon.sh" >> ~/.bashrc
         fi
         cd ..
 fi
@@ -241,7 +286,7 @@ else
         if [ "$install" != "-n" ];then
                 print_color "[WiFi] Installing Fluxion..." "BLUE"
                 directory=$(pwd)
-                echo "alias fluxion=${directory}/fluxion.sh" >> ~/.bashrc
+                sudo echo "alias fluxion=${directory}/fluxion.sh" >> ~/.bashrc
         fi
         cd ..
 fi
@@ -362,7 +407,7 @@ if [ -f "unix-privesc-check.sh" ] && [ -d "unix-privesc-check" ];then
         print_color "[PrivEsc-Linux] Unix-privesc-check found. Nothing to do." "BLUE"
 else
 
-        print_color "[PrivEsc-Linux] Unix-privesc-check not found correctly. Donwloading it (2 versions of it)..." "BLUE"
+        print_color "[PrivEsc-Linux] Unix-privesc-check not found correctly. Downloading 2 versions of it..." "BLUE"
         rm -rf unix-privesc-check*
         curl -O -k https://raw.githubusercontent.com/pentestmonkey/unix-privesc-check/1_x/unix-privesc-check &> /dev/null
         mv unix-privesc-check unix-privesc-check.sh
@@ -539,7 +584,7 @@ else
                 print_color "[Misc] Installing AutoRecon..." "BLUE"
                 pip3 install -r requirements.txt &> /dev/null
                 directory=$(pwd)
-                echo "alias autorecon=python3.7 ${directory}/autorecon.py" >> ~/.bashrc
+                sudo echo "alias autorecon=python3.7 ${directory}/autorecon.py" >> ~/.bashrc
         fi
         cd ..
 fi
@@ -558,6 +603,24 @@ else
         print_color "[Misc] SecLists not found. Donwloading them..." "BLUE"
         git clone https://github.com/danielmiessler/SecLists.git &> /dev/null
         print_color "[Misc] SecLists downloaded." "BLUE"
+fi
+
+## Sublime Text (very misc)
+print_color "[Misc] Checking for ${PURPLE}Sublime Text${NOCOLOR}..." "BLUE"
+
+installed=$(sudo apt list --installed sublime-text 2> /dev/null | wc -l)
+
+if [ "$installed" -gt 1 ];then
+
+        print_color "[Misc] Sublime Text found. Trying to update it..." "GREEN"
+        sudo apt-get upgrade sublime-text &> /dev/null
+else
+        print_color "[Misc] Sublime Text not found. Installing it..." "BLUE"
+        wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add - &> /dev/null
+        sudo apt-get install apt-transport-https &> /dev/null
+        echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list &> /dev/null
+        sudo apt-get install sublime-text &> /dev/null
+        print_color "[Misc] Sublime Text installed." "BLUE"
 fi
 print_color "[Misc] Done!" "GREEN"
 echo -e "${GREEN}[*]${NOCOLOR}Script executed. ${RED}Happy hacking! ;)${NOCOLOR}"
